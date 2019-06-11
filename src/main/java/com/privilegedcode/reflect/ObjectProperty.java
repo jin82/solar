@@ -34,4 +34,23 @@ public class ObjectProperty{
     public Field getField() {
         return field;
     }
+
+    public int setValue(Object instance, Object value) {
+        try {
+            if (hasSetter()) {
+                setter.setAccessible(true);
+                setter.invoke(instance, value);
+                return 1;
+            } else {
+                field.setAccessible(true);
+                field.set(instance, value);
+                return 2;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+
+
+    }
 }

@@ -32,6 +32,15 @@ public class ObjectPropertyParser<T> {
         return propertyMap.get(name);
     }
 
+    public int putProperty(T t,String name, Object value) {
+        init();
+        ObjectProperty objectProperty = propertyMap.get(name);
+        if (objectProperty == null) {
+            return 0;
+        }
+
+        return objectProperty.setValue(t, value);
+    }
 
     private void init() {
         if (!isInit) {
@@ -60,7 +69,7 @@ public class ObjectPropertyParser<T> {
         Method setter, getter;
         String setterName = ObjectPropertyUtils.setterName(field);
         try {
-            setter = objectClass.getMethod(setterName, field.getClass());
+            setter = objectClass.getMethod(setterName, field.getType());
         } catch (NoSuchMethodException e) {
             if (log.isDebugEnabled()) {
                 log.debug("property {} setter not found", setterName);
@@ -70,7 +79,7 @@ public class ObjectPropertyParser<T> {
 
         String getterName = ObjectPropertyUtils.getterName(field);
         try {
-            getter = objectClass.getMethod(getterName, field.getClass());
+            getter = objectClass.getMethod(getterName);
         } catch (NoSuchMethodException e) {
             if (log.isDebugEnabled()) {
                 log.debug("property {} getter not found", getterName);
